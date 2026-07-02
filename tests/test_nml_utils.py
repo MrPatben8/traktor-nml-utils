@@ -210,3 +210,18 @@ def test_collection_v4_traktor_layout(tmp_path):
     assert any(line.endswith("</ENTRY>") for line in lines)
     # One element per line means many lines, not a single blob.
     assert len(lines) > 50
+
+
+def test_collection_v4_byte_exact_roundtrip(tmp_path):
+    """A file already in Traktor's on-disk format must round-trip byte-for-byte.
+
+    This guards the whole write path at once: attribute order, ">" left
+    unescaped, 6-decimal floats, explicit close tags and per-line layout.
+    """
+    src = Path(os.path.join(dir_path, "fixtures", "collection_v4_traktor_format.nml"))
+    work = tmp_path / src.name
+    shutil.copy(src=src, dst=work)
+
+    original = src.read_text(encoding="utf8")
+    TraktorCollection(work).save()
+    assert work.read_text(encoding="utf8") == original

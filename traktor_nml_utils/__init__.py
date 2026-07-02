@@ -86,6 +86,10 @@ def format_traktor_layout(serialized: str) -> str:
     # Drop xsdata's declaration and collapse any whitespace between tags.
     serialized = re.sub(r"^\s*<\?xml[^>]*\?>", "", serialized)
     serialized = re.sub(r">\s+<", "><", serialized).strip()
+    # Traktor leaves ">" unescaped inside values (only "<", "&" and '"' are
+    # escaped); xsdata escapes ">" as "&gt;", so undo that. Raw ">" is valid
+    # XML in both attribute values and text, so this stays well-formed.
+    serialized = serialized.replace("&gt;", ">")
     # Expand self-closing empty elements: <X .../> -> <X ...></X>
     serialized = re.sub(
         r"<([A-Za-z0-9_]+)((?:\s[^<>]*)?)/>", r"<\1\2></\1>", serialized
