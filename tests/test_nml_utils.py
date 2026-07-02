@@ -190,3 +190,23 @@ def test_collection_v4_float_formatting(tmp_path):
     # NML VERSION >= 20 writes SAMPLE_TYPE_INFO as a bare integer, not a float.
     assert 'SAMPLE_TYPE_INFO="0"' in saved
     assert 'SAMPLE_TYPE_INFO="0.000000"' not in saved
+
+
+def test_collection_v4_traktor_layout(tmp_path):
+    """save() writes Traktor's on-disk layout: explicit close tags, one per line."""
+    src = Path(os.path.join(dir_path, "fixtures", "collection_v4.nml"))
+    work = tmp_path / "collection_v4.nml"
+    shutil.copy(src=src, dst=work)
+
+    TraktorCollection(work).save()
+    lines = work.read_text(encoding="utf8").split("\n")
+
+    # Traktor's exact XML declaration on its own first line.
+    assert lines[0] == '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>'
+    # Traktor never self-closes elements (no "<X/>").
+    assert "/>" not in work.read_text(encoding="utf8")
+    # Empty elements are written explicitly, each closing tag ending a line.
+    assert any(line.endswith("</LOCATION>") for line in lines)
+    assert any(line.endswith("</ENTRY>") for line in lines)
+    # One element per line means many lines, not a single blob.
+    assert len(lines) > 50

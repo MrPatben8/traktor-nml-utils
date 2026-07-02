@@ -69,6 +69,32 @@ def restore_traktor_float_format(serialized: str, nml) -> str:
     return pattern.sub(_repl, serialized)
 
 
+# Traktor's exact XML prolog (note the space before "?>" and standalone="no").
+TRAKTOR_XML_DECLARATION = '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>'
+
+
+def format_traktor_layout(serialized: str) -> str:
+    """Reformat a serialized NML document to match Traktor's on-disk layout.
+
+    Traktor writes empty elements with explicit closing tags (``<X></X>``,
+    never ``<X/>``) and puts exactly one newline after every closing tag.
+    xsdata self-closes empty elements and emits the document on a single line,
+    so we restore both. Angle brackets inside attribute values are always
+    escaped (``&lt;`` / ``&gt;``), so these tag-based substitutions never touch
+    attribute data.
+    """
+    # Drop xsdata's declaration and collapse any whitespace between tags.
+    serialized = re.sub(r"^\s*<\?xml[^>]*\?>", "", serialized)
+    serialized = re.sub(r">\s+<", "><", serialized).strip()
+    # Expand self-closing empty elements: <X .../> -> <X ...></X>
+    serialized = re.sub(
+        r"<([A-Za-z0-9_]+)((?:\s[^<>]*)?)/>", r"<\1\2></\1>", serialized
+    )
+    # One newline after every closing tag (leaves parent/first-child inline).
+    serialized = re.sub(r"(</[A-Za-z0-9_]+>)", r"\1\n", serialized)
+    return f"{TRAKTOR_XML_DECLARATION}\n{serialized}"
+
+
 class TraktorNmlMixin(ABC):
     parser = XmlParser()
 
@@ -79,9 +105,8 @@ class TraktorNmlMixin(ABC):
     def save(self):
         with self.path.open(mode="w", encoding="utf8") as file_obj:
             serialized = XmlSerializer().render(self.nml)
-            serialized = serialized.split("\n")
-            serialized = "\n".join(line.lstrip() for line in serialized)
             serialized = restore_traktor_float_format(serialized, self.nml)
+            serialized = format_traktor_layout(serialized)
             file_obj.write(serialized)
 
 
