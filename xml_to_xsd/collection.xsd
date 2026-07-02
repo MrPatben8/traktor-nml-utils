@@ -133,6 +133,10 @@
   <xs:complexType name="LOOPINFOType">
     <xs:simpleContent>
       <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="ORIGINAL_TITLE" use="optional"/>
+        <xs:attribute type="xs:string" name="ORIGINAL_TRACKID" use="optional"/>
+        <xs:attribute type="xs:float" name="ORIGINAL_LOOP_SIZE" use="optional"/>
+        <xs:attribute type="xs:float" name="ORIGINAL_LOOP_START" use="optional"/>
         <xs:attribute type="xs:float" name="SAMPLE_TYPE_INFO" use="optional"/>
       </xs:extension>
     </xs:simpleContent>

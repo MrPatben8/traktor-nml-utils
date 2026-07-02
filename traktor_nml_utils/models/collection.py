@@ -569,6 +569,10 @@ class Locationtype:
 class Loopinfotype:
     """
     :ivar value:
+    :ivar original_title:
+    :ivar original_trackid:
+    :ivar original_loop_size:
+    :ivar original_loop_start:
     :ivar sample_type_info:
     """
     class Meta:
@@ -576,6 +580,34 @@ class Loopinfotype:
 
     value: Optional[str] = field(
         default=None,
+    )
+    original_title: Optional[str] = field(
+        default=None,
+        metadata=dict(
+            name="ORIGINAL_TITLE",
+            type="Attribute"
+        )
+    )
+    original_trackid: Optional[str] = field(
+        default=None,
+        metadata=dict(
+            name="ORIGINAL_TRACKID",
+            type="Attribute"
+        )
+    )
+    original_loop_size: Optional[float] = field(
+        default=None,
+        metadata=dict(
+            name="ORIGINAL_LOOP_SIZE",
+            type="Attribute"
+        )
+    )
+    original_loop_start: Optional[float] = field(
+        default=None,
+        metadata=dict(
+            name="ORIGINAL_LOOP_START",
+            type="Attribute"
+        )
     )
     sample_type_info: Optional[float] = field(
         default=None,

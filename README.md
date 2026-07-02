@@ -3,7 +3,7 @@
 ![Python package](https://github.com/wolkenarchitekt/traktor-nml-utils/workflows/Python%20package/badge.svg?branch=master)
 
 This module contains utilities to parse and modify [Native Instruments Traktor](https://www.native-instruments.com/de/products/traktor/dj-software/traktor-pro-3/) NML files.\
-Both Traktor 2.x and Traktor 3.x NML files are supported.
+Traktor 2.x, 3.x and 4.x NML files are supported.
 
 It can parse collection NML files (`$TRAKTOR_DIR/collection.nml`) and history NML files (`$TRAKTOR_DIR/History/history_$DATE.nml`).
 
@@ -20,8 +20,9 @@ keep a copy of your NML files.
 
 Because traktor-nml-utils uses `dataclasses`, you need at least Python 3.7.x.
 
-traktor-nml-utils is tested with Traktor 3.3.0, though it should be able to parse
-Traktor 2.x NML files as well. Feel free to provide files that cause problems on parsing.  
+traktor-nml-utils is tested with Traktor 4.x (NML `VERSION="20"`) and Traktor 3.3.0,
+though it should be able to parse Traktor 2.x NML files as well. Feel free to provide
+files that cause problems on parsing.  
 
 ## Installation
 
