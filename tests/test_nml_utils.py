@@ -38,9 +38,9 @@ def test_add_entry_to_collection(tmpdir):
         collection_file = Path(os.path.join(dir_path, "fixtures", "collection.nml"))
         temp_collection = tmpdir.join("collection.nml")
     shutil.copy(src=collection_file, dst=temp_collection)
-    print(temp_collection)
 
-    path = Path(os.path.join(dir_path, "fixtures", "collection.nml"))
+    # Operate on the temp copy so the committed fixture is never mutated.
+    path = Path(str(temp_collection))
     collection = TraktorCollection(path)
     entry = Entrytype(
         location=Locationtype(
@@ -128,3 +128,100 @@ def test_add_entry_to_collection(tmpdir):
     collection.nml.collection.entry.append(entry)
     collection.save()
     assert len(TraktorCollection(path).nml.collection.entry) == 2
+
+
+def _canonical(element):
+    """Order-independent representation of an XML element tree."""
+    return (
+        element.tag,
+        tuple(sorted(element.attrib.items())),
+        (element.text or "").strip(),
+        [_canonical(child) for child in element],
+    )
+
+
+def test_collection_v4_parses():
+    """Traktor 4 (NML VERSION=20) collections parse, including new fields."""
+    path = Path(os.path.join(dir_path, "fixtures", "collection_v4.nml"))
+    collection = TraktorCollection(path)
+    assert collection.nml.version == 20
+    assert collection.nml.head.program == "Traktor Pro 4"
+
+    loopinfos = [
+        entry.loopinfo
+        for entry in collection.nml.collection.entry
+        if entry.loopinfo is not None
+    ]
+    assert loopinfos, "fixture should contain at least one LOOPINFO"
+    loopinfo = loopinfos[0]
+    # Attributes that Traktor 4 writes but the 3.x model silently dropped.
+    assert loopinfo.original_title is not None
+    assert loopinfo.original_loop_size is not None
+    assert loopinfo.original_loop_start is not None
+
+
+def test_collection_v4_roundtrip_is_lossless(tmp_path):
+    """Parsing then saving a Traktor 4 collection must not change any data."""
+    import xml.etree.ElementTree as ET
+
+    src = Path(os.path.join(dir_path, "fixtures", "collection_v4.nml"))
+    work = tmp_path / "collection_v4.nml"
+    shutil.copy(src=src, dst=work)
+
+    TraktorCollection(work).save()
+
+    before = _canonical(ET.parse(str(src)).getroot())
+    after = _canonical(ET.parse(str(work)).getroot())
+    assert before == after
+
+
+def test_collection_v4_float_formatting(tmp_path):
+    """Floats keep Traktor's 6-decimal format; SAMPLE_TYPE_INFO stays integer."""
+    src = Path(os.path.join(dir_path, "fixtures", "collection_v4.nml"))
+    work = tmp_path / "collection_v4.nml"
+    shutil.copy(src=src, dst=work)
+
+    TraktorCollection(work).save()
+    saved = work.read_text(encoding="utf8")
+
+    assert 'BPM_QUALITY="100.000000"' in saved
+    assert 'LEN="0.000000"' in saved
+    assert 'BPM_QUALITY="100.0"' not in saved
+    # NML VERSION >= 20 writes SAMPLE_TYPE_INFO as a bare integer, not a float.
+    assert 'SAMPLE_TYPE_INFO="0"' in saved
+    assert 'SAMPLE_TYPE_INFO="0.000000"' not in saved
+
+
+def test_collection_v4_traktor_layout(tmp_path):
+    """save() writes Traktor's on-disk layout: explicit close tags, one per line."""
+    src = Path(os.path.join(dir_path, "fixtures", "collection_v4.nml"))
+    work = tmp_path / "collection_v4.nml"
+    shutil.copy(src=src, dst=work)
+
+    TraktorCollection(work).save()
+    lines = work.read_text(encoding="utf8").split("\n")
+
+    # Traktor's exact XML declaration on its own first line.
+    assert lines[0] == '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>'
+    # Traktor never self-closes elements (no "<X/>").
+    assert "/>" not in work.read_text(encoding="utf8")
+    # Empty elements are written explicitly, each closing tag ending a line.
+    assert any(line.endswith("</LOCATION>") for line in lines)
+    assert any(line.endswith("</ENTRY>") for line in lines)
+    # One element per line means many lines, not a single blob.
+    assert len(lines) > 50
+
+
+def test_collection_v4_byte_exact_roundtrip(tmp_path):
+    """A file already in Traktor's on-disk format must round-trip byte-for-byte.
+
+    This guards the whole write path at once: attribute order, ">" left
+    unescaped, 6-decimal floats, explicit close tags and per-line layout.
+    """
+    src = Path(os.path.join(dir_path, "fixtures", "collection_v4_traktor_format.nml"))
+    work = tmp_path / src.name
+    shutil.copy(src=src, dst=work)
+
+    original = src.read_text(encoding="utf8")
+    TraktorCollection(work).save()
+    assert work.read_text(encoding="utf8") == original

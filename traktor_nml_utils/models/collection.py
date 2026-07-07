@@ -16,6 +16,13 @@ class Albumtype:
     value: Optional[str] = field(
         default=None,
     )
+    of_tracks: Optional[int] = field(
+        default=None,
+        metadata=dict(
+            name="OF_TRACKS",
+            type="Attribute"
+        )
+    )
     track: Optional[int] = field(
         default=None,
         metadata=dict(
@@ -27,13 +34,6 @@ class Albumtype:
         default=None,
         metadata=dict(
             name="TITLE",
-            type="Attribute"
-        )
-    )
-    of_tracks: Optional[int] = field(
-        default=None,
-        metadata=dict(
-            name="OF_TRACKS",
             type="Attribute"
         )
     )
@@ -378,10 +378,45 @@ class Infotype:
             type="Attribute"
         )
     )
+    label: Optional[str] = field(
+        default=None,
+        metadata=dict(
+            name="LABEL",
+            type="Attribute"
+        )
+    )
     comment: Optional[str] = field(
         default=None,
         metadata=dict(
             name="COMMENT",
+            type="Attribute"
+        )
+    )
+    key_lyrics: Optional[str] = field(
+        default=None,
+        metadata=dict(
+            name="KEY_LYRICS",
+            type="Attribute"
+        )
+    )
+    remixer: Optional[str] = field(
+        default=None,
+        metadata=dict(
+            name="REMIXER",
+            type="Attribute"
+        )
+    )
+    producer: Optional[str] = field(
+        default=None,
+        metadata=dict(
+            name="PRODUCER",
+            type="Attribute"
+        )
+    )
+    rating: Optional[str] = field(
+        default=None,
+        metadata=dict(
+            name="RATING",
             type="Attribute"
         )
     )
@@ -399,6 +434,13 @@ class Infotype:
             type="Attribute"
         )
     )
+    playcount: Optional[int] = field(
+        default=None,
+        metadata=dict(
+            name="PLAYCOUNT",
+            type="Attribute"
+        )
+    )
     playtime: Optional[int] = field(
         default=None,
         metadata=dict(
@@ -413,10 +455,24 @@ class Infotype:
             type="Attribute"
         )
     )
+    ranking: Optional[int] = field(
+        default=None,
+        metadata=dict(
+            name="RANKING",
+            type="Attribute"
+        )
+    )
     import_date: Optional[str] = field(
         default=None,
         metadata=dict(
             name="IMPORT_DATE",
+            type="Attribute"
+        )
+    )
+    last_played: Optional[str] = field(
+        default=None,
+        metadata=dict(
+            name="LAST_PLAYED",
             type="Attribute"
         )
     )
@@ -441,66 +497,10 @@ class Infotype:
             type="Attribute"
         )
     )
-    label: Optional[str] = field(
-        default=None,
-        metadata=dict(
-            name="LABEL",
-            type="Attribute"
-        )
-    )
-    key_lyrics: Optional[str] = field(
-        default=None,
-        metadata=dict(
-            name="KEY_LYRICS",
-            type="Attribute"
-        )
-    )
     catalog_no: Optional[str] = field(
         default=None,
         metadata=dict(
             name="CATALOG_NO",
-            type="Attribute"
-        )
-    )
-    playcount: Optional[int] = field(
-        default=None,
-        metadata=dict(
-            name="PLAYCOUNT",
-            type="Attribute"
-        )
-    )
-    ranking: Optional[int] = field(
-        default=None,
-        metadata=dict(
-            name="RANKING",
-            type="Attribute"
-        )
-    )
-    last_played: Optional[str] = field(
-        default=None,
-        metadata=dict(
-            name="LAST_PLAYED",
-            type="Attribute"
-        )
-    )
-    remixer: Optional[str] = field(
-        default=None,
-        metadata=dict(
-            name="REMIXER",
-            type="Attribute"
-        )
-    )
-    rating: Optional[str] = field(
-        default=None,
-        metadata=dict(
-            name="RATING",
-            type="Attribute"
-        )
-    )
-    producer: Optional[str] = field(
-        default=None,
-        metadata=dict(
-            name="PRODUCER",
             type="Attribute"
         )
     )
@@ -569,6 +569,10 @@ class Locationtype:
 class Loopinfotype:
     """
     :ivar value:
+    :ivar original_title:
+    :ivar original_trackid:
+    :ivar original_loop_size:
+    :ivar original_loop_start:
     :ivar sample_type_info:
     """
     class Meta:
@@ -576,6 +580,34 @@ class Loopinfotype:
 
     value: Optional[str] = field(
         default=None,
+    )
+    original_title: Optional[str] = field(
+        default=None,
+        metadata=dict(
+            name="ORIGINAL_TITLE",
+            type="Attribute"
+        )
+    )
+    original_trackid: Optional[str] = field(
+        default=None,
+        metadata=dict(
+            name="ORIGINAL_TRACKID",
+            type="Attribute"
+        )
+    )
+    original_loop_size: Optional[float] = field(
+        default=None,
+        metadata=dict(
+            name="ORIGINAL_LOOP_SIZE",
+            type="Attribute"
+        )
+    )
+    original_loop_start: Optional[float] = field(
+        default=None,
+        metadata=dict(
+            name="ORIGINAL_LOOP_START",
+            type="Attribute"
+        )
     )
     sample_type_info: Optional[float] = field(
         default=None,
@@ -785,6 +817,13 @@ class Tempotype:
     value: Optional[str] = field(
         default=None,
     )
+    bpm_transientcoherence: Optional[float] = field(
+        default=None,
+        metadata=dict(
+            name="BPM_TRANSIENTCOHERENCE",
+            type="Attribute"
+        )
+    )
     bpm: Optional[float] = field(
         default=None,
         metadata=dict(
@@ -796,13 +835,6 @@ class Tempotype:
         default=None,
         metadata=dict(
             name="BPM_QUALITY",
-            type="Attribute"
-        )
-    )
-    bpm_transientcoherence: Optional[float] = field(
-        default=None,
-        metadata=dict(
-            name="BPM_TRANSIENTCOHERENCE",
             type="Attribute"
         )
     )
@@ -1077,18 +1109,18 @@ class SearchExpressionType:
     class Meta:
         name = "SEARCH_EXPRESSIONType"
 
-    query: Optional[str] = field(
-        default=None,
-        metadata=dict(
-            name="QUERY",
-            type="Attribute",
-            required=True
-        )
-    )
     version: Optional[str] = field(
         default=None,
         metadata=dict(
             name="VERSION",
+            type="Attribute",
+            required=True
+        )
+    )
+    query: Optional[str] = field(
+        default=None,
+        metadata=dict(
+            name="QUERY",
             type="Attribute",
             required=True
         )
@@ -1119,7 +1151,6 @@ class Smartlisttype:
             required=True
         )
     )
-
 
 
 @dataclass
@@ -1266,7 +1297,6 @@ class Settype:
             type="Attribute"
         )
     )
-
 
 
 @dataclass
