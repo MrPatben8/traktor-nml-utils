@@ -24,7 +24,7 @@ traktor-nml-utils = "traktor_nml_utils.cli:app"
 [project.optional-dependencies]
 dev = [
     "build",
-    "bump2version",
+    "bump-my-version",
     "mypy",
     "pytest",
     "ruff",
@@ -39,6 +39,21 @@ addopts = "--verbose --capture=no"
 
 [tool.mypy]
 files = ["traktor_nml_utils"]
+
+[tool.bumpversion]
+current_version = "4.0.0"
+commit = true
+tag = true
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+search = "\nversion = \"{current_version}\""
+replace = "\nversion = \"{new_version}\""
+
+[[tool.bumpversion.files]]
+filename = "traktor_nml_utils/__init__.py"
+search = "__version__ = \"{current_version}\""
+replace = "__version__ = \"{new_version}\""
 
 [tool.ruff]
 target-version = "py310"

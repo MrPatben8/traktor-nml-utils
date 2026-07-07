@@ -82,12 +82,12 @@ xml-to-python: xml-to-xsd xsd-to-python
 
 bumpversion-patch:
 	. $(VIRTUALENV_DIR)/bin/activate && \
-		bump2version patch
+		bump-my-version bump patch
 
 bumpversion-minor:
 	. $(VIRTUALENV_DIR)/bin/activate && \
-		bump2version minor
+		bump-my-version bump minor
 
 bumpversion-major:
 	. $(VIRTUALENV_DIR)/bin/activate && \
-		bump2version major
+		bump-my-version bump major
