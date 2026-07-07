@@ -8,37 +8,33 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.7]
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
 
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip setuptools wheel
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+        python -m pip install --upgrade pip
+        pip install -e ".[dev]"
 
-    - name: Run flake8
+    - name: Run ruff
       run: |
-        flake8 traktor_nml_utils
+        ruff check
+        ruff format --check
 
     - name: Run mypy
       run: |
-        mypy traktor_nml_utils
-
-    - name: Run black
-      run: |
-        black --check --exclude traktor_nml_utils/models/ traktor_nml_utils tests/
+        mypy
 
     - name: Twine check
       run: |
-        python setup.py sdist
+        python -m build
         twine check dist/*
 
     - name: Test with pytest

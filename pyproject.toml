@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "traktor-nml-utils"
+version = "4.0.0"
+description = "Utilities to read and write Traktor NML files"
+readme = "README.md"
+license = "GPL-3.0-only"
+authors = [{ name = "Ingo Weinmann", email = "mail@ingoweinmann.de" }]
+requires-python = ">=3.10"
+dependencies = [
+    "xsdata>=24.0",
+    "typer>=0.12",
+]
+
+[project.urls]
+Homepage = "https://github.com/wolkenarchitekt/traktor-nml-utils"
+
+[project.scripts]
+traktor-nml-utils = "traktor_nml_utils.cli:app"
+
+[project.optional-dependencies]
+dev = [
+    "build",
+    "bump2version",
+    "mypy",
+    "pytest",
+    "ruff",
+    "twine",
+]
+
+[tool.setuptools.packages.find]
+include = ["traktor_nml_utils*"]
+
+[tool.pytest.ini_options]
+addopts = "--verbose --capture=no"
+
+[tool.mypy]
+files = ["traktor_nml_utils"]
+
+[tool.ruff]
+target-version = "py310"
+# .ipython_*: local scratch files, not part of the package
+extend-exclude = ["traktor_nml_utils/models", ".ipython_*.py"]

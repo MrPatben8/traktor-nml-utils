@@ -18,7 +18,7 @@ keep a copy of your NML files.
 
 ## Requirements
 
-Because traktor-nml-utils uses `dataclasses`, you need at least Python 3.7.x.
+traktor-nml-utils requires Python 3.10 or newer.
 
 traktor-nml-utils is tested with Traktor 4.x (NML `VERSION="20"`) and Traktor 3.3.0,
 though it should be able to parse Traktor 2.x NML files as well. Feel free to provide

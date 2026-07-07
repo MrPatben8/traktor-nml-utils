@@ -1,16 +1,22 @@
 import logging
 from pathlib import Path
 
-import click
+import typer
+
 from traktor_nml_utils import TraktorCollection, TraktorHistory, is_history_file
 
 logger = logging.getLogger(__name__)
 
+app = typer.Typer()
 
-@click.group()
-@click.option("-v", "--verbose", count=True, help="Verbose logging")
-@click.option("-d", "--debug", help="Debug logging")
-def cli(verbose, debug):
+
+@app.callback()
+def main(
+    verbose: int = typer.Option(
+        0, "--verbose", "-v", count=True, help="Verbose logging"
+    ),
+    debug: bool = typer.Option(False, "--debug", "-d", help="Debug logging"),
+):
     loglevel = logging.WARNING
     if verbose:
         loglevel = logging.INFO
@@ -19,15 +25,13 @@ def cli(verbose, debug):
     logging.basicConfig(level=loglevel)
 
 
-@cli.command()
-@click.argument("nml")
-def traktor_import(nml):
+@app.command()
+def traktor_import(nml: Path):
     """NML import from file or directory."""
-    p = Path(nml)
-    if p.is_dir():
-        nml_files = p.glob("**/*.nml")
+    if nml.is_dir():
+        nml_files = nml.glob("**/*.nml")
     else:
-        nml_files = [p]
+        nml_files = iter([nml])
 
     for nml_file in nml_files:
         print(f"Importing NML: {nml_file}")
@@ -38,4 +42,4 @@ def traktor_import(nml):
 
 
 if __name__ == "__main__":
-    cli()
+    app()

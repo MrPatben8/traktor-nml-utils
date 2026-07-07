@@ -42,7 +42,7 @@ def _float_attribute_names(nml) -> set:
         if dataclasses.is_dataclass(obj):
             for field_ in dataclasses.fields(obj):
                 if "float" in str(field_.type):
-                    name = (field_.metadata or {}).get("name")
+                    name = field_.metadata.get("name")
                     if name:
                         names.add(name)
     return names
@@ -56,7 +56,8 @@ def restore_traktor_float_format(serialized: str, nml) -> str:
 
     version = getattr(nml, "version", None) or 0
     pattern = re.compile(
-        r'\b(' + "|".join(sorted(float_attrs))
+        r"\b("
+        + "|".join(sorted(float_attrs))
         + r')="(-?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?)"'
     )
 
@@ -86,6 +87,15 @@ def format_traktor_layout(serialized: str) -> str:
     # Drop xsdata's declaration and collapse any whitespace between tags.
     serialized = re.sub(r"^\s*<\?xml[^>]*\?>", "", serialized)
     serialized = re.sub(r">\s+<", "><", serialized).strip()
+
+    # Traktor always double-quotes attributes, writing quotes inside values as
+    # "&quot;" (e.g. the STEMS JSON). xsdata's sax-based writer switches to
+    # single quotes for such values, so convert them back.
+    def _double_quote_attr(match: "re.Match") -> str:
+        value = match.group(2).replace('"', "&quot;")
+        return f'{match.group(1)}"{value}"'
+
+    serialized = re.sub(r"(\s[A-Za-z0-9_]+=)'([^']*)'", _double_quote_attr, serialized)
     # Traktor leaves ">" unescaped inside values (only "<", "&" and '"' are
     # escaped); xsdata escapes ">" as "&gt;", so undo that. Raw ">" is valid
     # XML in both attribute values and text, so this stays well-formed.

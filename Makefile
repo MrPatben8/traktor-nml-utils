@@ -23,26 +23,24 @@ docker-test:
 	docker run -it --rm $(CONTAINER) pytest
 
 docker-lint:
-	docker run -it --rm $(CONTAINER) flake8 traktor_nml_utils
-	docker run -it --rm $(CONTAINER) mypy traktor_nml_utils
-	docker run -it --rm $(CONTAINER) black --check --exclude traktor_nml_utils/models/ traktor_nml_utils tests/
+	docker run -it --rm $(CONTAINER) ruff check
+	docker run -it --rm $(CONTAINER) ruff format --check
+	docker run -it --rm $(CONTAINER) mypy
 
 virtualenv-create:
-	python3.7 -m venv $(VIRTUALENV_DIR)
+	python3 -m venv $(VIRTUALENV_DIR)
 	. $(VIRTUALENV_DIR)/bin/activate && \
-		pip install --upgrade setuptools pip && \
-		pip install -r requirements.txt && \
-		pip install -r requirements-dev.txt && \
-		pip install -e .
+		pip install --upgrade pip && \
+		pip install -e ".[dev]"
 
 virtualenv-test:
 	. $(VIRTUALENV_DIR)/bin/activate && \
 		pytest tests
 
 virtualenv-lint:
-	. $(VIRTUALENV_DIR)/bin/activate && flake8 traktor_nml_utils
-	. $(VIRTUALENV_DIR)/bin/activate && mypy traktor_nml_utils
-	. $(VIRTUALENV_DIR)/bin/activate && black --check --exclude traktor_nml_utils/models/ traktor_nml_utils tests/
+	. $(VIRTUALENV_DIR)/bin/activate && ruff check
+	. $(VIRTUALENV_DIR)/bin/activate && ruff format --check
+	. $(VIRTUALENV_DIR)/bin/activate && mypy
 
 virtualenv-test-import-file:
 	. $(VIRTUALENV_DIR)/bin/activate && \
@@ -55,7 +53,7 @@ virtualenv-test-import-dir:
 pypi-upload:
 	rm -rf dist
 	. $(VIRTUALENV_DIR)/bin/activate && \
-		python setup.py sdist && \
+		python -m build && \
 		twine upload dist/*
 
 xml-to-xsd:

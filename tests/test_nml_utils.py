@@ -1,6 +1,5 @@
 import os
 import shutil
-import tempfile
 from pathlib import Path
 
 from traktor_nml_utils import TraktorCollection, TraktorHistory
@@ -34,9 +33,8 @@ def test_collection_with_indexing():
 
 
 def test_add_entry_to_collection(tmpdir):
-    with tempfile.TemporaryFile() as fp:
-        collection_file = Path(os.path.join(dir_path, "fixtures", "collection.nml"))
-        temp_collection = tmpdir.join("collection.nml")
+    collection_file = Path(os.path.join(dir_path, "fixtures", "collection.nml"))
+    temp_collection = tmpdir.join("collection.nml")
     shutil.copy(src=collection_file, dst=temp_collection)
 
     # Operate on the temp copy so the committed fixture is never mutated.
