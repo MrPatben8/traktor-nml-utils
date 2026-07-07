@@ -93,13 +93,15 @@ collection.save()
 Run tests within Docker container:
 
 ```shell
-make docker-build docker-test
+argc docker-build
+argc docker-test
 ```
 
 Create virtualenv and run tests:
 
 ```shell
-make virtualenv-create virtualenv-test
+argc virtualenv-create
+argc virtualenv-test
 ```
 
 
@@ -112,27 +114,25 @@ pytest --nml-dir="~/traktor3/" tests/test_parser.py::test_parse_nml_files
 
 ## How does it work?
 
-### NML file to XSD schema 
+### NML files to Python dataclasses
 
-Since there is no official XSD available to parse Traktor NML files, an XSD was generated
-both for history and collection files using [Apache XMLBeans](https://xmlbeans.apache.org/).
+Since there is no official schema for Traktor NML files, the dataclasses in
+`traktor_nml_utils/models/` were generated from sample NML files with
+[xsdata](https://pypi.org/project/xsdata/), which infers the schema directly from
+XML documents. They have since been hand-tuned to match Traktor's exact output
+format, so they are maintained in the repository rather than regenerated blindly.
 
-See them in `xml_to_xsd/collection.xsd` and `xml_to_xsd/history.xsd`.
-
-You can regenerate the XSD by putting your own `collection.nml` and `history.nml` overwriting
- the existing ones in `./xml_to_xsd/` and run:
-```shell
-make xml-to-xsd
-```
- 
-### XSD to Python dataclasses
-
-Using the generated XSD files, Python dataclasses can be generated with [xsdata](https://pypi.org/project/xsdata/).
-To update these, run:
+To generate fresh models from your own files, overwrite `collection.nml` and
+`history.nml` in `./xml_to_xsd/` and run:
 
 ```shell
-make xsd-to-python
+argc generate-models
 ```
+
+This writes new models to `build/generated/`. Compare them against the hand-tuned
+modules in `traktor_nml_utils/models/` and merge any differences manually (class
+names differ: xsdata names classes after elements, e.g. `Entry` instead of the
+committed `Entrytype`).
  
 ## Contribution
 
