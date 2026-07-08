@@ -29,11 +29,14 @@ clean() {
     -prune -exec rm -rfv {} \;
 }
 
-# @cmd Install dev tooling (argc, direnv)
+# @cmd Install dev tooling (argc, direnv, uv)
 install() {
   install_argc
   if ! dpkg -s direnv >/dev/null 2>&1; then
     sudo apt-get install -y direnv
+  fi
+  if ! command -v uv >/dev/null 2>&1; then
+    curl -LsSf https://astral.sh/uv/install.sh | sh
   fi
 }
 
@@ -71,35 +74,36 @@ docker-lint() {
   docker run -it --rm "$CONTAINER" mypy
 }
 
+# uv run syncs the environment exactly by default and would remove the
+# dev extra again, so every invocation passes --extra dev.
+
 # @cmd Create the virtualenv and install the project with dev dependencies
 virtualenv-create() {
-  python3 -m venv "$VIRTUALENV_DIR"
-  "$VIRTUALENV_DIR/bin/pip" install --upgrade pip
-  "$VIRTUALENV_DIR/bin/pip" install -e ".[dev]"
+  uv sync --extra dev
 }
 
 # @cmd Run the tests in the virtualenv
 virtualenv-test() {
-  "$VIRTUALENV_DIR/bin/python" -m pytest tests
+  uv run --extra dev pytest tests
 }
 
 # @cmd Run lint, format check and type check in the virtualenv
 virtualenv-lint() {
-  "$VIRTUALENV_DIR/bin/ruff" check
-  "$VIRTUALENV_DIR/bin/ruff" format --check
-  "$VIRTUALENV_DIR/bin/mypy"
+  uv run --extra dev ruff check
+  uv run --extra dev ruff format --check
+  uv run --extra dev mypy
 }
 
 # @cmd Import a Traktor collection file via the CLI
 # @env TRAKTOR_DIR! Path to the Traktor data directory
 virtualenv-test-import-file() {
-  "$VIRTUALENV_DIR/bin/traktor-nml-utils" traktor-import "$TRAKTOR_DIR/collection.nml"
+  uv run --extra dev traktor-nml-utils traktor-import "$TRAKTOR_DIR/collection.nml"
 }
 
 # @cmd Import a Traktor history directory via the CLI
 # @env TRAKTOR_DIR! Path to the Traktor data directory
 virtualenv-test-import-dir() {
-  "$VIRTUALENV_DIR/bin/traktor-nml-utils" traktor-import "$TRAKTOR_DIR/History"
+  uv run --extra dev traktor-nml-utils traktor-import "$TRAKTOR_DIR/History"
 }
 
 # @cmd Build the package and upload it to PyPI
