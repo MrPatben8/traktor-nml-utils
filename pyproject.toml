@@ -58,6 +58,11 @@ filename = "traktor_nml_utils/__init__.py"
 search = "__version__ = \"{current_version}\""
 replace = "__version__ = \"{new_version}\""
 
+[[tool.bumpversion.files]]
+filename = "uv.lock"
+search = "name = \"traktor-nml-utils\"\nversion = \"{current_version}\""
+replace = "name = \"traktor-nml-utils\"\nversion = \"{new_version}\""
+
 [tool.ruff]
 target-version = "py310"
 # .ipython_*: local scratch files, not part of the package
