@@ -25,7 +25,7 @@ traktor-nml-utils = "traktor_nml_utils.cli:app"
 dev = [
     "build",
     "bump-my-version",
-    "mypy",
+    "pyright",
     "pytest",
     "ruff",
     "twine",
@@ -37,8 +37,11 @@ include = ["traktor_nml_utils*"]
 [tool.pytest.ini_options]
 addopts = "--verbose --capture=no"
 
-[tool.mypy]
-files = ["traktor_nml_utils"]
+[tool.pyright]
+include = ["traktor_nml_utils"]
+# The xsdata-generated models redefine the nested Meta class of their base
+# class (Nml overrides Nmltype.Meta), which is the intended xsdata pattern.
+reportIncompatibleVariableOverride = false
 
 [tool.bumpversion]
 current_version = "4.0.0"

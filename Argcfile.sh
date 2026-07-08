@@ -71,7 +71,7 @@ docker-test() {
 docker-lint() {
   docker run -it --rm "$CONTAINER" ruff check
   docker run -it --rm "$CONTAINER" ruff format --check
-  docker run -it --rm "$CONTAINER" mypy
+  docker run -it --rm "$CONTAINER" pyright
 }
 
 # uv run syncs the environment exactly by default and would remove the
@@ -91,7 +91,7 @@ virtualenv-test() {
 virtualenv-lint() {
   uv run --extra dev ruff check
   uv run --extra dev ruff format --check
-  uv run --extra dev mypy
+  uv run --extra dev pyright
 }
 
 # @cmd Import a Traktor collection file via the CLI

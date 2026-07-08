@@ -28,9 +28,9 @@ jobs:
         ruff check
         ruff format --check
 
-    - name: Run mypy
+    - name: Run pyright
       run: |
-        mypy
+        pyright
 
     - name: Twine check
       run: |
