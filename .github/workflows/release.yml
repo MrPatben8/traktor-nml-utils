@@ -1,0 +1,43 @@
+name: Publish to PyPI
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+
+    - uses: actions/setup-python@v6
+      with:
+        python-version: "3.13"
+
+    - name: Build distributions
+      run: |
+        python -m pip install build
+        python -m build
+
+    - uses: actions/upload-artifact@v7
+      with:
+        name: dist
+        path: dist/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/traktor-nml-utils
+    permissions:
+      # Required for PyPI trusted publishing (OIDC)
+      id-token: write
+    steps:
+    - uses: actions/download-artifact@v8
+      with:
+        name: dist
+        path: dist/
+
+    - uses: pypa/gh-action-pypi-publish@release/v1

@@ -103,9 +103,15 @@ virtualenv-test-import-dir() {
 }
 
 # @cmd Build the package and upload it to PyPI
+#
+# Releases are normally published via trusted publishing: publishing a
+# GitHub release triggers .github/workflows/release.yml. This task is a
+# manual fallback and needs a PyPI API token (~/.pypirc or TWINE_*).
 pypi-upload() {
   rm -rf dist
-  "$VIRTUALENV_DIR/bin/python" -m build
+  # pyproject-build instead of python -m build: the build/ output
+  # directory of generate-models shadows the pypa build package
+  "$VIRTUALENV_DIR/bin/pyproject-build"
   "$VIRTUALENV_DIR/bin/twine" upload dist/*
 }
 
