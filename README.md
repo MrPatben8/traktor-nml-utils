@@ -40,14 +40,14 @@ from pathlib import Path
 
 collection = TraktorCollection(path=Path('collection.nml'))
 
-for entry in collection.nml.entry:
+for entry in collection.nml.collection.entry:
     print(entry.artist, entry.title, entry.info.ranking)
 ```
 
 ### Get cuepoint start
 
 ```python
-entry = collection.nml.entry[0]
+entry = collection.nml.collection.entry[0]
 
 for cue_v2 in entry.cue_v2:
     print(cue_v2.start)
@@ -60,7 +60,7 @@ artist = "Yotto"
 title = "Another Riff For The Good Times (Extended Mix)"
 
 entry = [
-    entry for entry in collection.nml.entry 
+    entry for entry in collection.nml.collection.entry
     if entry.artist == artist
     and entry.title == title
 ][0]
@@ -106,11 +106,11 @@ argc virtualenv-test
 
 
 To test if parsing your own collection/history files with traktor-nml-utils works, 
-pass your Traktor directory to pytest:
+pass your Traktor directory to the CLI:
 
 ```shell
-pytest --nml-dir="~/traktor3/" tests/test_parser.py::test_parse_nml_files
-```  
+traktor-nml-utils traktor-import ~/traktor3/
+```
 
 ## How does it work?
 
