@@ -62,3 +62,9 @@ replace = "__version__ = \"{new_version}\""
 target-version = "py310"
 # .ipython_*: local scratch files, not part of the package
 extend-exclude = ["traktor_nml_utils/models", ".ipython_*.py"]
+# Apply the excludes also to explicitly passed paths (treefmt, editors)
+force-exclude = true
+
+[tool.ruff.lint]
+# I: import sorting, replaces isort
+extend-select = ["I"]

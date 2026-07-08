@@ -1,0 +1,18 @@
+excludes = ["*.lock", ".git/*"]
+
+# Both formatters read their configuration from pyproject.toml, so treefmt,
+# `argc virtualenv-lint` and the GitHub workflow apply identical rules.
+# Import sorting (I) and unused-import removal (F401) are ruff lint rules,
+# replacing isort and autoflake.
+
+[formatter.ruff-check]
+command = "ruff"
+options = ["check", "--fix", "--exit-zero"]
+includes = ["*.py"]
+priority = 1
+
+[formatter.ruff-format]
+command = "ruff"
+options = ["format"]
+includes = ["*.py"]
+priority = 2

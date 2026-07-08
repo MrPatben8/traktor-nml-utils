@@ -6,10 +6,11 @@ import sys
 from abc import ABC
 from pathlib import Path
 
-from traktor_nml_utils.models.collection import Nml as CollectionNml
-from traktor_nml_utils.models.history import Nml as HistoryNml
 from xsdata.formats.dataclass.parsers import XmlParser
 from xsdata.formats.dataclass.serializers import XmlSerializer
+
+from traktor_nml_utils.models.collection import Nml as CollectionNml
+from traktor_nml_utils.models.history import Nml as HistoryNml
 
 # Traktor writes floating-point attributes with a fixed 6 decimal places
 # (e.g. BPM="122.000671", START="29.684317", LEN="0.000000"). xsdata
