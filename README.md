@@ -1,5 +1,9 @@
 # Traktor NML utils
 
+[![Tests](https://github.com/wolkenarchitekt/traktor-nml-utils/actions/workflows/test.yml/badge.svg)](https://github.com/wolkenarchitekt/traktor-nml-utils/actions/workflows/test.yml)
+[![PyPI](https://img.shields.io/pypi/v/traktor-nml-utils)](https://pypi.org/project/traktor-nml-utils/)
+![Python versions](https://img.shields.io/pypi/pyversions/traktor-nml-utils)
+
 This module contains utilities to parse and modify [Native Instruments Traktor](https://www.native-instruments.com/de/products/traktor/dj-software/traktor-pro-3/) NML files.\
 Traktor 2.x, 3.x and 4.x NML files are supported.
 
