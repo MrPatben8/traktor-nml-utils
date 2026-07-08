@@ -11,9 +11,7 @@ It can parse collection NML files (`$TRAKTOR_DIR/collection.nml`) and history NM
 
 All NML attributes are readable and writable using auto-generated dataclasses 
 (see `traktor_nml_utils/models`).\
-This allows a typesafe way to work with NML files, fully supporting IDE autocompletion:
-
-![alt text](./doc/images/pycharm_completion.gif "PyCharm completion")
+This allows a typesafe way to work with NML files, fully supporting IDE autocompletion
 
 While reading should work in 99% cases, writing NML files hasn't been tested thoroughly enough yet, so always 
 keep a copy of your NML files.
@@ -135,11 +133,3 @@ This writes new models to `build/generated/`. Compare them against the hand-tune
 modules in `traktor_nml_utils/models/` and merge any differences manually (class
 names differ: xsdata names classes after elements, e.g. `Entry` instead of the
 committed `Entrytype`).
- 
-## Contribution
-
-### Help wanted!
-Since the XSD-schema was created from my own Traktor files, the schema might 
-not fit for all collection and history files.
-In case you have any problems parsing NML files, please report an issue and 
-attach the problematic NML file so I can update the schema.
