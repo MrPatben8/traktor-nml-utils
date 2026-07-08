@@ -1,4 +1,5 @@
 import logging
+from collections.abc import Iterator
 from pathlib import Path
 
 import typer
@@ -28,6 +29,7 @@ def main(
 @app.command()
 def traktor_import(nml: Path):
     """NML import from file or directory."""
+    nml_files: Iterator[Path]
     if nml.is_dir():
         nml_files = nml.glob("**/*.nml")
     else:
