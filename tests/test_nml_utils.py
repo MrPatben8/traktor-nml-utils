@@ -32,6 +32,21 @@ def test_collection_with_indexing():
     assert len(collection.nml.collection.entry) == 1
 
 
+def test_collection_with_smartlists():
+    path = Path(os.path.join(dir_path, "fixtures", "collection_smartlist.nml"))
+    collection = TraktorCollection(path)
+    assert len(collection.nml.collection.entry) == 1
+
+    nodes = collection.nml.playlists.node.subnodes.node
+    smartlist_node = [node for node in nodes if node.type == "SMARTLIST"][0]
+    assert smartlist_node.name == "Instrumentals"
+    assert smartlist_node.smartplaylist.uuid == "5566f26cd8414288a8ea378d0cc5ac55"
+    assert (
+        smartlist_node.smartplaylist.search_expression.query
+        == '$COMMENT % "#Instrumental"'
+    )
+
+
 def test_add_entry_to_collection(tmpdir):
     collection_file = Path(os.path.join(dir_path, "fixtures", "collection.nml"))
     temp_collection = tmpdir.join("collection.nml")

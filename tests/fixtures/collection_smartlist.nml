@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<NML VERSION="19">
+    <HEAD COMPANY="www.native-instruments.com" PROGRAM="Traktor"></HEAD>
+    <MUSICFOLDERS></MUSICFOLDERS>
+    <COLLECTION ENTRIES="1">
+        <ENTRY MODIFIED_DATE="2021/5/29" MODIFIED_TIME="180" TITLE="Ballerholic" ARTIST="KhronosBeats">
+            <LOCATION DIR="/:Music/:new tracks/:" FILE="Ballerholic.mp3" VOLUME="Rocket" VOLUMEID="Macintosh HD"></LOCATION>
+            <MODIFICATION_INFO AUTHOR_TYPE="user"></MODIFICATION_INFO>
+            <INFO BITRATE="116000" COMMENT="#Instrumental" KEY="9m" PLAYCOUNT="2" PLAYTIME="228" PLAYTIME_FLOAT="227.087997" IMPORT_DATE="2021/5/28" LAST_PLAYED="2020/12/18" FLAGS="14" FILESIZE="3328"></INFO>
+            <TEMPO BPM="84.999809" BPM_QUALITY="100.000000"></TEMPO>
+            <LOUDNESS PEAK_DB="-2.206281" PERCEIVED_DB="-0.392288" ANALYZED_DB="-0.392288"></LOUDNESS>
+            <MUSICAL_KEY VALUE="17"></MUSICAL_KEY>
+            <CUE_V2 NAME="AutoGrid" DISPL_ORDER="0" TYPE="4" START="65.996960" LEN="0.000000" REPEATS="-1" HOTCUE="0"></CUE_V2>
+        </ENTRY>
+    </COLLECTION>
+    <SETS ENTRIES="0"></SETS>
+    <PLAYLISTS>
+        <NODE TYPE="FOLDER" NAME="$ROOT">
+            <SUBNODES COUNT="2">
+                <NODE TYPE="PLAYLIST" NAME="_LOOPS">
+                    <PLAYLIST ENTRIES="0" TYPE="LIST" UUID="7c75deb302774506a64377d0385235cb"></PLAYLIST>
+                </NODE>
+                <NODE TYPE="SMARTLIST" NAME="Instrumentals">
+                    <SMARTLIST UUID="5566f26cd8414288a8ea378d0cc5ac55">
+                        <SEARCH_EXPRESSION VERSION="7" QUERY="$COMMENT % &quot;#Instrumental&quot;"></SEARCH_EXPRESSION>
+                    </SMARTLIST>
+                </NODE>
+            </SUBNODES>
+        </NODE>
+    </PLAYLISTS>
+    <INDEXING></INDEXING>
+</NML>
