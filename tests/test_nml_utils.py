@@ -26,6 +26,14 @@ def test_history():
     )
 
 
+def test_history_with_indexing():
+    path = Path(os.path.join(dir_path, "fixtures", "history_indexing.nml"))
+    history = TraktorHistory(path)
+    sorting_info = history.nml.indexing.sorting_info[0]
+    assert sorting_info.path == "$HISTORY"
+    assert sorting_info.criteria.attribute == "2"
+
+
 def test_collection_with_indexing():
     path = Path(os.path.join(dir_path, "fixtures", "collection_indexing.nml"))
     collection = TraktorCollection(path)
