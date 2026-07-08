@@ -686,7 +686,7 @@ class Tempotype:
             type="Attribute"
         )
     )
-    bpm_quality: Optional[int] = field(
+    bpm_quality: Optional[float] = field(
         default=None,
         metadata=dict(
             name="BPM_QUALITY",
