@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "traktor-nml-utils"
-version = "4.0.0"
+version = "4.1.0"
 description = "Utilities to read and write Traktor NML files"
 readme = "README.md"
 license = "GPL-3.0-only"
@@ -44,7 +44,7 @@ include = ["traktor_nml_utils"]
 reportIncompatibleVariableOverride = false
 
 [tool.bumpversion]
-current_version = "4.0.0"
+current_version = "4.1.0"
 commit = true
 tag = true
 

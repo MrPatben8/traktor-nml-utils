@@ -997,7 +997,7 @@ wheels = [
 
 [[package]]
 name = "traktor-nml-utils"
-version = "4.0.0"
+version = "4.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "typer" },
